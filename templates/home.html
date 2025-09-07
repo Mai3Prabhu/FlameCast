@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FWI Prediction</title>
+    <!-- Google Fonts for a more modern font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN for utility-first styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #1a202c; /* Deep slate blue */
+      }
+      .card {
+        background: #2d3748; /* Darker card background */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+      }
+      .btn-primary {
+        background-color: #3182ce; /* Vibrant blue for primary action */
+        border-color: #3182ce;
+        transition: background-color 0.3s ease;
+      }
+      .btn-primary:hover {
+        background-color: #2c5282;
+      }
+      .btn-secondary {
+        background-color: #4a5568; /* Gray for secondary action */
+        border-color: #4a5568;
+        transition: background-color 0.3s ease;
+      }
+      .btn-secondary:hover {
+        background-color: #2d3748;
+      }
+      @keyframes pop-in {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .result-card {
+        animation: pop-in 0.5s ease-out;
+      }
+      h1, h2 {
+        color: #e2e8f0; /* Light gray for headings */
+      }
+      label {
+        color: #a0aec0; /* Lighter gray for labels */
+      }
+      input {
+        background-color: #4a5568;
+        color: #e2e8f0;
+        border: 1px solid #4a5568;
+      }
+      input:focus {
+        border-color: #3182ce;
+        box-shadow: 0 0 0 1px #3182ce;
+      }
+      .text-gray-600 {
+        color: #a0aec0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mx-auto p-4 md:p-8">
+      <h1 class="text-4xl font-bold text-center my-8">Fire Weather Index Prediction</h1>
+      
+      <!-- Quote Section -->
+      <div class="text-center italic text-gray-600 mb-8">
+        <p id="quote-text"></p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Prediction Form Card -->
+        <div class="card p-6">
+          <h2 class="text-2xl font-semibold mb-6">Input Meteorological Data</h2>
+          <form action="{{ url_for('predict_datapoint') }}" method="POST" id="prediction-form">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="Temperature" class="block font-medium mb-1">Temperature</label>
+                <input type="text" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="Temperature" name="Temperature" placeholder="Enter Temperature" required>
+              </div>
+              <div>
+                <label for="RH" class="block font-medium mb-1">RH</label>
+                <input type="text" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="RH" name="RH" placeholder="Enter Relative Humidity" required>
+              </div>
+              <div>
+                <label for="WS" class="block font-medium mb-1">WS</label>
+                <input type="text" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="WS" name="WS" placeholder="Enter Wind Speed" required>
+              </div>
+              <div>
+                <label for="Rain" class="block font-medium mb-1">Rain</label>
+                <input type="text" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="Rain" name="Rain" placeholder="Enter Rain" required>
+              </div>
+              <div>
+                <label for="FFMC" class="block font-medium mb-1">FFMC</label>
+                <input type="text" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="FFMC" name="FFMC" placeholder="Enter FFMC" required>
+              </div>
+              <div>
+                <label for="DMC" class="block font-medium mb-1">DMC</label>
+                <input type="text" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="DMC" name="DMC" placeholder="Enter DMC" required>
+              </div>
+              <div>
+                <label for="ISI" class="block font-medium mb-1">ISI</label>
+                <input type="text" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="ISI" name="ISI" placeholder="Enter ISI" required>
+              </div>
+              <div>
+                <label for="Classes" class="block font-medium mb-1">Classes</label>
+                <input type="text" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="Classes" name="Classes" placeholder="Enter Classes" required>
+              </div>
+              <div class="col-span-full">
+                <label for="Region" class="block font-medium mb-1">Region</label>
+                <input type="text" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="Region" name="Region" placeholder="Enter Region" required>
+              </div>
+            </div>
+            
+            <div class="mt-6 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+              <button type="submit" class="w-full sm:w-1/2 btn-primary text-white font-semibold py-3 rounded-lg">
+                Predict FWI
+              </button>
+              <button type="reset" class="w-full sm:w-1/2 btn-secondary text-white font-semibold py-3 rounded-lg">
+                Clear Form
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Prediction Result Card -->
+        <div class="card p-6 flex flex-col items-center justify-center">
+          <h2 class="text-2xl font-semibold mb-4">Prediction Result</h2>
+          {% if result %}
+            <div class="result-card bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-lg text-center shadow-lg w-full max-w-sm">
+              <p class="text-4xl font-bold mb-2">{{ result | round(2) }}</p>
+              <p class="text-sm">This is the predicted FWI value.</p>
+            </div>
+          {% else %}
+            <div class="text-center text-gray-500">
+              <p>Enter your data and click "Predict FWI" to see the result here.</p>
+            </div>
+          {% endif %}
+        </div>
+        
+      </div>
+      
+    </div>
+
+    <script>
+      // Array of quotes
+      const quotes = [
+        "Climate is what we expect, weather is what we get.",
+        "The wind howls, but the mountains do not move.",
+        "The weather is not a problem. It's an opportunity.",
+        "There is no such thing as bad weather, only different kinds of good weather.",
+        "To the statistician, the weather is only a series of numbers.",
+        "It's a beautiful day for a forest fire.",
+        "The wind blows, the fire dances, and the smoke rises to the sky."
+      ];
+
+      // Function to display a random quote
+      function displayRandomQuote() {
+        const quoteTextElement = document.getElementById('quote-text');
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        quoteTextElement.textContent = `"${quotes[randomIndex]}"`;
+      }
+
+      // Display a quote on page load
+      window.onload = displayRandomQuote;
+    </script>
+  </body>
+</html>
