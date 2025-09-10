@@ -4,25 +4,6 @@ FlameCast is a web application designed to predict the Fire Weather Index (FWI) 
 
 ## Project Structure
 
-flamecast-project/
-├── .gitignore
-├── application.py
-├── models/
-│   ├── ridge.pkl
-│   └── scaler.pkl
-├── notebooks/
-│   ├── Algerian_forest_fires_cleaned_dataset.csv
-│   ├── Algerian_forest_fires_dataset_UPDATE.csv
-│   ├── EDA and Feature Engineering.ipynb
-│   └── Model Training.ipynb
-├── requirements.txt
-├── templates/
-│   ├── home.html
-│   └── index.html
-└── venv/
-
-## About Project Structure
-
 This project is organized into the following directories:
 
 - application.py: The main Flask application file that defines the web routes and handles the core logic.
@@ -101,3 +82,4 @@ The application will be running on http://127.0.0.1:5000. Open this URL in your 
 - Frontend: HTML, CSS, JavaScript (for dynamic quotes), Bootstrap (for styling)
 
 - Version Control: Git, GitHub
+
